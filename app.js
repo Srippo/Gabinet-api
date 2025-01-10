@@ -21,6 +21,10 @@ app.use(bodyParser.json());
 const pacjentRoutes = require("./api/router/pacjenci");
 app.use("/pacjenci", pacjentRoutes);
 
+const dentystaRoutes = require("./api/router/dentysci");
+app.use("/dentysci", dentystaRoutes);
+
+
 // Obsługa błędów
 app.use((req, res, next) => {
   res.status(404).json({ message: "Not Found" });
