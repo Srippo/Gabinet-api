@@ -24,6 +24,11 @@ app.use("/pacjenci", pacjentRoutes);
 const dentystaRoutes = require("./api/router/dentysci");
 app.use("/dentysci", dentystaRoutes);
 
+const zabiegRoutes = require("./api/router/zabiegi");
+app.use("/zabiegi", zabiegRoutes);
+
+const wizytaRoutes = require("./api/router/wizyty");
+app.use("/wizyty", wizytaRoutes);
 
 // Obsługa błędów
 app.use((req, res, next) => {
