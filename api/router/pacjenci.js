@@ -3,15 +3,13 @@ const router = express.Router();
 const mongoose = require("mongoose");
 const Pacjent = require("../models/pacjent");
 
-// Lista wszystkich pacjentów
-router.get("/", (req, res, next) => {
+router.get("/", (req, res) => {
     Pacjent.find()
         .then(pacjenci => res.status(200).json(pacjenci))
         .catch(err => res.status(500).json({ error: err }));
 });
 
-// Dodanie nowego pacjenta
-router.post("/", (req, res, next) => {
+router.post("/", (req, res) => {
     const pacjent = new Pacjent({
         _id: new mongoose.Types.ObjectId(),
         imie: req.body.imie,

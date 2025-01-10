@@ -13,4 +13,5 @@ const dentystaSchema = mongoose.Schema({
     email: { type: String, required: true }
 });
 
-module.exports = mongoose.model("Dentysta", dentystaSchema);
+module.exports = mongoose.model("Dentysta", dentystaSchema, "dentists");
+
