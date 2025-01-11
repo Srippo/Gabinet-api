@@ -30,6 +30,9 @@ app.use("/zabiegi", zabiegRoutes);
 const wizytaRoutes = require("./api/router/wizyty");
 app.use("/wizyty", wizytaRoutes);
 
+const zaplanowaneWizytaRoutes = require("./api/router/zaplanowaneWizyty");
+app.use("/zaplanowane-wizyty", zaplanowaneWizytaRoutes);
+
 // Obsługa błędów
 app.use((req, res, next) => {
   res.status(404).json({ message: "Not Found" });
