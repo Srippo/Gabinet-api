@@ -31,7 +31,7 @@ const wizytaRoutes = require("./api/router/wizyty");
 app.use("/wizyty", wizytaRoutes);
 
 const zaplanowaneWizytaRoutes = require("./api/router/zaplanowaneWizyty");
-app.use("/zaplanowane-wizyty", zaplanowaneWizytaRoutes);
+app.use("/zaplanowaneWizyty", zaplanowaneWizytaRoutes);
 
 // Obsługa błędów
 app.use((req, res, next) => {
