@@ -77,3 +77,22 @@ exports.deleteById = (req, res) => {
         })
         .catch(err => res.status(500).json({ error: err.message }));
 };
+
+// Aktualizacja zaplanowanej wizyty po ID
+exports.updateById = (req, res) => {
+    const id = req.params.wizytaId;
+    const updateFields = req.body;
+
+    ZaplanowanaWizyta.findByIdAndUpdate(id, { $set: updateFields }, { new: true, runValidators: true })
+        .then(updatedWizyta => {
+            if (updatedWizyta) {
+                res.status(200).json({
+                    message: "Zaplanowana wizyta zaktualizowana",
+                    wizyta: updatedWizyta,
+                });
+            } else {
+                res.status(404).json({ message: "Nie znaleziono zaplanowanej wizyty o podanym ID" });
+            }
+        })
+        .catch(err => res.status(500).json({ error: err.message }));
+};

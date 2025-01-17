@@ -64,3 +64,22 @@ exports.deleteDentistById = (req, res, next) => {
     })
     .catch(err => res.status(500).json({ error: err.message }));
 };
+
+// Aktualizacja dentysty po ID
+exports.updateDentistById = (req, res, next) => {
+  const id = req.params.id;
+  const updateData = req.body;
+
+  Dentysta.findByIdAndUpdate(id, updateData, { new: true, runValidators: true })
+    .then(updatedDentist => {
+      if (updatedDentist) {
+        res.status(200).json({
+          message: "Dentysta zaktualizowany",
+          dentysta: updatedDentist,
+        });
+      } else {
+        res.status(404).json({ message: "Nie znaleziono dentysty o podanym ID" });
+      }
+    })
+    .catch(err => res.status(500).json({ error: err.message }));
+};

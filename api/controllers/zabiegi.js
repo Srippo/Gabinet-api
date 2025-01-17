@@ -37,16 +37,20 @@ exports.updateById = (req, res) => {
     const id = req.params.zabiegId;
     const updateFields = req.body;
 
-    Zabieg.updateOne({ _id: id }, { $set: updateFields })
-        .then(result => {
-            if (result.nModified > 0) {
-                res.status(200).json({ message: "Zabieg zaktualizowany", result });
+    Zabieg.findByIdAndUpdate(id, { $set: updateFields }, { new: true, runValidators: true })
+        .then(updatedZabieg => {
+            if (updatedZabieg) {
+                res.status(200).json({
+                    message: "Zabieg zaktualizowany",
+                    zabieg: updatedZabieg,
+                });
             } else {
                 res.status(404).json({ message: "Nie znaleziono zabiegu o podanym ID" });
             }
         })
-        .catch(err => res.status(500).json({ error: err }));
+        .catch(err => res.status(500).json({ error: err.message }));
 };
+
 
 // Dodanie nowego zabiegu
 exports.create = (req, res) => {

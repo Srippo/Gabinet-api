@@ -8,7 +8,7 @@ const checkRole = require("../middleware/checkRole");
 router.get("/", authMiddleware, zabiegi.getAll);
 
 // Aktualizacja danych zabiegu
-router.put("/:zabiegId", authMiddleware, zabiegi.updateById);
+router.patch("/:zabiegId", authMiddleware, zabiegi.updateById);
 
 // Dodanie nowego zabiegu
 router.post("/", authMiddleware, checkRole("admin"), zabiegi.create);

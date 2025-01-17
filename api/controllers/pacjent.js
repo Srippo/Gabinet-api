@@ -62,3 +62,27 @@ exports.deletePatientById = (req, res) => {
     })
     .catch(err => res.status(500).json({ error: err.message }));
 };
+
+// Aktualizacja pacjenta po ID (dla zalogowanego użytkownika)
+exports.updatePatientById = (req, res) => {
+  const id = req.params.id;
+  const updateData = req.body;
+
+  Pacjent.findOne({ _id: id, addedBy: req.userData.userId })
+    .then(pacjent => {
+      if (!pacjent) {
+        return res.status(404).json({ message: "Nie znaleziono pacjenta o podanym ID lub brak uprawnień do jego edycji" });
+      }
+
+      Pacjent.findByIdAndUpdate(id, updateData, { new: true, runValidators: true })
+        .then(updatedPacjent => {
+          res.status(200).json({
+            message: "Pacjent zaktualizowany",
+            pacjent: updatedPacjent,
+          });
+        })
+        .catch(err => res.status(500).json({ error: err.message }));
+    })
+    .catch(err => res.status(500).json({ error: err.message }));
+};
+

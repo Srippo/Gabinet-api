@@ -1,6 +1,5 @@
-# API Gabinetu - projekt zaliczeniowy
-> Aplikacja do zarządzania bazą danych gabinetu dentystycznego. 
-> Live demo [_here_](https://www.example.com). <!-- If you have the project hosted somewhere, include the link here. -->
+# Dental office API - university project
+> Back-end REST API used to manage a dental office's database
 
 ## Table of Contents
 * [General Info](#general-information)
@@ -17,24 +16,30 @@
 
 
 ## General Information
-- Provide general information about your project here.
-- What problem does it (intend to) solve?
-- What is the purpose of your project?
-- Why did you undertake it?
-<!-- You don't have to answer all the questions - just the ones relevant to your project. -->
+- This is an university project. This REST API can be used to run and manage a dental office's mongoDB database.
 
 
 ## Technologies Used
-- Tech 1 - version 1.0
-- Tech 2 - version 2.0
-- Tech 3 - version 3.0
+- node.js - version 22.13.0
+- bcrypt - version 5.1.1
+- dotenv - version 16.4.7
+- express - version 4.21.2
+- express-validator - version 7.2.1
+- jsonwebtoken - version 9.0.2
+- mongoose - version 8.9.4
+- morgan - version 1.10.0
+- mongoDB - version 8.0.4 Atlas
+- postman - version 11.27.3
+- mongoDB compass - 8.0.4 Atlas
+- MongoDB Atlas - 8.0.4 Atlas
 
 
 ## Features
 List the ready features here:
-- Awesome feature 1
-- Awesome feature 2
-- Awesome feature 3
+- Authentication - This software uses authentication middleware. It allows user to sign up and login as either admin or user, both roles offer different abilities in managing the database.
+- Adding, editing and deleting patients
+- Managing visits (arranging planned visits, cancelling, changing dates)
+- Storing doctor's data and assigning them to visits
 
 
 ## Screenshots
@@ -43,10 +48,101 @@ List the ready features here:
 
 
 ## Setup
-What are the project requirements/dependencies? Where are they listed? A requirements.txt or a Pipfile.lock file perhaps? Where is it located?
+1. Install Node.js ([link:](https://nodejs.org/en))
+2. Clone repository https://github.com/Srippo/Gabinet-api.git
+3. Install dependencies (dependencies can be found in the dependencies.txt file) 
+    - npm install
+4. Configure a database in MongoDB Atlas
+    - Create a cluster in MongoDB Atlas
+5. Create an .env file and insert
+    - DB_USER = yourname
+    - DB_PASSWORD = yourpassword
+    - DB_NAME = yourdatabasename
+    - JWT_KEY = secret
+6. Create connection to your database
+7. Launch the API with node server.js 
 
-Proceed to describe how to install / setup one's local environment / get started with the project.
 
+## Back-end
+
+### API'S
+The back-end exposes a set of RESTful API endpoints to interact with patients, dentists, visits and medical procedures. These endpoints allow users to create, read, update, and delete the necessary data. The API also supports assigning specific dentists and patients to visits, along with procedures that took place.
+
+### RDBMS and Data Persistence
+This application uses MongoDB with Mongoose for data storage and management. MongoDB is a NoSQL database that stores data in a flexible, JSON-like format. Mongoose is used to define schemas and models for the different entities, such as dentists, patients, visits, procedures and handle interactions with the database. All data is persisted in MongoDB, ensuring future retrieval and analysis.
+
+### Authentication
+The application implements authentication mechanisms, such as JWT (JSON Web Tokens), to ensure that only authorized users can access or modify data (e.g., dentists and procedures can only be added by user with the role 'admin', patients can be added by users with lower ranked role of 'user', viewing the data can be done by any logged in user etc.). Users must first sign up, then log in to receive an authentication token, which they include in the header of their API requests.
+
+
+## API Endpoints
+
+
+Use Base URL: [http://localhost:3000/](http://localhost:3000/)
+
+
+### Register & Login
+
+
+| Method | Route                | Description                |
+|--------|----------------------|----------------------------|
+| POST   | /userRoutes/signup   | Registers new users        |
+| POST   | /userRoutes/login    | Logs into user account     |
+
+
+### Dentysci
+
+
+| Method | Route         | Description                                                            |
+|--------|---------------|------------------------------------------------------------------------|
+| GET    | /dentysci     | Returns array of dentists in database (user must be logged in)         |
+| POST   | /dentysci     | Creates & returns a new dentist ('admin' role only)                    |
+| DELETE | /dentysci/:id | Deletes a dentist specified by id ('admin' role only)                  |
+| PATCH  | /dentysci/:id | Updates a given field of a dentist specified by id ('admin' role only) |
+
+
+### Pacjenci
+
+
+| Method | Route         | Description                                                                 |
+|--------|---------------|-----------------------------------------------------------------------------|
+| GET    | /pacjenci     | Returns array of patients in database (user must be logged in)              |
+| POST   | /pacjenci     | Creates & returns a new patient (user must be logged in)                    |
+| DELETE | /pacjenci/:id | Deletes a patient specified by id (user must be logged in)                  |
+| PATCH  | /pacjenci/:id | Updates a given field of a patient specified by id (user must be logged in) |
+
+
+### Wizyty
+
+
+| Method | Route             | Description                                                               |
+|--------|-------------------|---------------------------------------------------------------------------|
+| GET    | /wizyty           | Returns array of visits in database (user must be logged in)              |
+| POST   | /wizyty           | Creates & returns a new visit (user must be logged in)                    |
+| DELETE | /wizyty/:wizytaId | Deletes a visit specified by id (user must be logged in)                  |
+| PATCH  | /wizyty/:wizytaId | Updates a given field of a visit specified by id (user must be logged in) |
+
+
+### Zabiegi
+
+
+| Method | Route              | Description                                                                   |
+|--------|--------------------|-------------------------------------------------------------------------------|
+| GET    | /zabiegi           | Returns array of procedures in database (user must be logged in)              |
+| POST   | /zabiegi           | Creates & returns a new procedure ('admin' role only)                         | 
+| DELETE | /zabiegi/:zabiegId | Deletes a procedure specified by id ('admin' role only)                       |
+| PATCH  | /zabiegi/:zabiegId | Updates a given field of a procedure specified by id (user must be logged in) |
+
+
+### Zaplanowane wizyty
+
+
+| Method | Route                        | Description                                                                       |
+|--------|------------------------------|-----------------------------------------------------------------------------------|
+| GET    | /zaplanowaneWizyty           | Returns array of planned visits in database (user must be logged in)              |
+| POST   | /zaplanowaneWizyty           | Creates & returns a new planned visit (user must be logged in)                    |
+| DELETE | /zaplanowaneWizyty/:wizytaId | Deletes a planned visit specified by id (user must be logged in)                  |
+| PATCH  | /zaplanowaneWizyty/:wizytaId | Updates a given field of a planned visit specified by id (user must be logged in) |
 
 ## Usage
 How does one go about using it?

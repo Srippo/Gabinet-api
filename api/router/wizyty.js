@@ -12,4 +12,7 @@ router.post("/", authMiddleware, wizyty.create);
 // Usuwanie wizyty po ID
 router.delete("/:wizytaId", authMiddleware, wizyty.deleteById);
 
+// Aktualizacja wizyty
+router.patch("/:wizytaId", authMiddleware, wizyty.updateById);
+
 module.exports = router;

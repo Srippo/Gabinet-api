@@ -12,4 +12,7 @@ router.post("/", authMiddleware, pacjent.createPatient);
 // Usuwanie pacjenta po ID
 router.delete("/:id", authMiddleware, pacjent.deletePatientById);
 
+// Aktualizacja danych pacjenta
+router.patch("/:id", authMiddleware, pacjent.updatePatientById);
+
 module.exports = router;

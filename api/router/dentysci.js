@@ -13,4 +13,7 @@ router.post("/", authMiddleware, checkRole('admin'), dentysta.createDentist);
 // Usuwanie dentysty po ID (tylko dla admina)
 router.delete("/:id", authMiddleware, checkRole('admin'), dentysta.deleteDentistById);
 
+// Aktualizowanie dentysty po ID (tylko dla admina)
+router.patch("/:id", authMiddleware, checkRole('admin'), dentysta.updateDentistById);
+
 module.exports = router;

@@ -90,4 +90,25 @@ exports.deleteById = (req, res) => {
     .catch(err => res.status(500).json({ error: err.message }));
 };
 
-  
+// Aktualizacja wizyty po ID (dla zalogowanego użytkownika)
+exports.updateById = (req, res) => {
+  const id = req.params.wizytaId;
+  const updateData = req.body;
+
+  Wizyta.findOne({ _id: id, dodanaPrzez: req.userData.userId })
+    .then(wizyta => {
+      if (!wizyta) {
+        return res.status(404).json({ message: "Nie znaleziono wizyty o podanym ID lub brak uprawnień do jej edycji" });
+      }
+
+      Wizyta.findByIdAndUpdate(id, updateData, { new: true, runValidators: true })
+        .then(updatedWizyta => {
+          res.status(200).json({
+            message: "Wizyta zaktualizowana",
+            wizyta: updatedWizyta,
+          });
+        })
+        .catch(err => res.status(500).json({ error: err.message }));
+    })
+    .catch(err => res.status(500).json({ error: err.message }));
+};

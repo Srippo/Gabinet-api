@@ -12,4 +12,7 @@ router.post("/", authMiddleware, zaplanowaneWizyty.add);
 // Usuwanie zaplanowanej wizyty po ID
 router.delete("/:wizytaId", authMiddleware, zaplanowaneWizyty.deleteById);
 
+// Aktualizacja zaplanowanej wizyty
+router.patch("/:wizytaId", authMiddleware, zaplanowaneWizyty.updateById);
+
 module.exports = router;
