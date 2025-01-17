@@ -38,7 +38,7 @@ exports.createDentist = (req, res, next) => {
     godziny_pracy: req.body.godziny_pracy,
     telefon: req.body.telefon,
     email: req.body.email,
-  });a
+  });
 
   dentysta.save()
     .then(result => {

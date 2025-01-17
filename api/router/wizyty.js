@@ -1,17 +1,15 @@
 const express = require("express");
 const router = express.Router();
 const wizyty = require("../controllers/wizyty");
+const authMiddleware = require("../middleware/auth");
 
 // Pobranie wszystkich wizyt
-router.get("/", wizyty.getAll);
+router.get("/", authMiddleware, wizyty.getAll);
 
 // Dodanie nowej wizyty
-router.post("/", wizyty.create);
-
-// Pobranie wizyty po ID
-router.get("/:wizytaId", wizyty.getById);
+router.post("/", authMiddleware, wizyty.create);
 
 // Usuwanie wizyty po ID
-router.delete("/:wizytaId", wizyty.deleteById);
+router.delete("/:wizytaId", authMiddleware, wizyty.deleteById);
 
 module.exports = router;

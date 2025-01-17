@@ -8,6 +8,7 @@ const wizytaSchema = mongoose.Schema({
     platnosc: { type: Boolean, required: true },
     koszt_wizyty: { type: Number, required: true },
     uwagi_wizyta: { type: String, required: false },
+    dodanaPrzez: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     wykonane_zabiegi: [
         {
             id_zabiegu: { type: mongoose.Types.ObjectId, ref: "Zabieg", required: true },

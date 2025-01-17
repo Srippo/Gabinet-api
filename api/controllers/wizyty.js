@@ -3,9 +3,13 @@ const Wizyta = require("../models/wizyta");
 
 // Pobranie wszystkich wizyt z możliwością filtrowania
 exports.getAll = async (req, res) => {
-  const { imie_pacjenta, nazwisko_pacjenta, imie_dentysty, nazwisko_dentysty, data } = req.query;
+  const { id_wizyty, imie_pacjenta, nazwisko_pacjenta, imie_dentysty, nazwisko_dentysty, data } = req.query;
 
-  let filter = {};
+  let filter = {dodanaPrzez: req.userData.userId };
+
+  if (id_wizyty) {
+    filter["_id"] = id_wizyty;
+  }
 
   if (imie_pacjenta || nazwisko_pacjenta) {
     const pacjentFilter = {};
@@ -40,6 +44,7 @@ exports.getAll = async (req, res) => {
     .populate("id_pacjenta", "imie nazwisko")
     .populate("id_dentysty", "imie nazwisko specjalizacja")
     .populate("wykonane_zabiegi.id_zabiegu", "nazwa opis cena")
+    .populate("dodanaPrzez", "email name")
     .then(wizyty => {
       if (wizyty.length > 0) {
         res.status(200).json(wizyty);
@@ -61,7 +66,8 @@ exports.create = (req, res) => {
     platnosc: req.body.platnosc,
     koszt_wizyty: req.body.koszt_wizyty,
     uwagi_wizyta: req.body.uwagi_wizyta,
-    wykonane_zabiegi: req.body.wykonane_zabiegi
+    wykonane_zabiegi: req.body.wykonane_zabiegi,
+    dodanaPrzez: req.userData.userId
   });
 
   wizyta.save()
@@ -69,35 +75,19 @@ exports.create = (req, res) => {
     .catch(err => res.status(500).json({ error: err }));
 };
 
-// Pobranie wizyty po ID
-exports.getById = (req, res) => {
-  const id = req.params.wizytaId;
-  Wizyta.findById(id)
-    .populate("id_pacjenta", "imie nazwisko")
-    .populate("id_dentysty", "imie nazwisko specjalizacja")
-    .populate("wykonane_zabiegi.id_zabiegu", "nazwa opis cena")
-    .then(wizyta => {
-      if (wizyta) {
-        res.status(200).json(wizyta);
-      } else {
-        res.status(404).json({ message: "Nie znaleziono wizyty" });
-      }
-    })
-    .catch(err => res.status(500).json({ error: err }));
-};
-
 // Usuwanie wizyty po ID
 exports.deleteById = (req, res) => {
-    const id = req.params.wizytaId;
-  
-    Wizyta.findByIdAndDelete(id)
-      .then(deletedWizyta => {
-        if (deletedWizyta) {
-          res.status(200).json({ message: "Wizyta została usunięta", wizyta: deletedWizyta });
-        } else {
-          res.status(404).json({ message: "Nie znaleziono wizyty o podanym ID" });
-        }
-      })
-      .catch(err => res.status(500).json({ error: err.message }));
-  };
+  const id = req.params.wizytaId;
+
+  Wizyta.findOneAndDelete({ _id: id, dodanaPrzez: req.userData.userId })
+    .then(deletedWizyta => {
+      if (deletedWizyta) {
+        res.status(200).json({ message: "Wizyta została usunięta", wizyta: deletedWizyta });
+      } else {
+        res.status(404).json({ message: "Nie znaleziono wizyty o podanym ID lub brak uprawnień" });
+      }
+    })
+    .catch(err => res.status(500).json({ error: err.message }));
+};
+
   

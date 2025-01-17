@@ -1,17 +1,15 @@
 const express = require("express");
 const router = express.Router();
 const zaplanowaneWizyty = require("../controllers/zaplanowaneWizyty");
+const authMiddleware = require("../middleware/auth");
 
 // Pobranie wszystkich zaplanowanych wizyt
-router.get("/", zaplanowaneWizyty.getAll);
+router.get("/", authMiddleware, zaplanowaneWizyty.getAll);
 
 // Dodanie nowej zaplanowanej wizyty
-router.post("/", zaplanowaneWizyty.add);
-
-// Pobranie zaplanowanej wizyty po ID
-router.get("/:wizytaId", zaplanowaneWizyty.getById);
+router.post("/", authMiddleware, zaplanowaneWizyty.add);
 
 // Usuwanie zaplanowanej wizyty po ID
-router.delete("/:wizytaId", zaplanowaneWizyty.deleteById);
+router.delete("/:wizytaId", authMiddleware, zaplanowaneWizyty.deleteById);
 
 module.exports = router;

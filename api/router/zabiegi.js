@@ -1,20 +1,19 @@
 const express = require("express");
 const router = express.Router();
 const zabiegi = require("../controllers/zabiegi");
+const authMiddleware = require("../middleware/auth");
+const checkRole = require("../middleware/checkRole");
 
 // Pobranie wszystkich zabiegów
-router.get("/", zabiegi.getAll);
-
-// Wyszukiwanie zabiegu po ID
-router.get("/:zabiegId", zabiegi.getById);
+router.get("/", authMiddleware, zabiegi.getAll);
 
 // Aktualizacja danych zabiegu
-router.put("/:zabiegId", zabiegi.updateById);
+router.put("/:zabiegId", authMiddleware, zabiegi.updateById);
 
 // Dodanie nowego zabiegu
-router.post("/", zabiegi.create);
+router.post("/", authMiddleware, checkRole("admin"), zabiegi.create);
 
 // Usunięcie zabiegu
-router.delete("/:zabiegId", zabiegi.deleteById);
+router.delete("/:zabiegId", authMiddleware, checkRole("admin"), zabiegi.deleteById);
 
 module.exports = router;

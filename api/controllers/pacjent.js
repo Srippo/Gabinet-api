@@ -17,6 +17,7 @@ exports.getAllPatients = (req, res) => {
   }
 
   Pacjent.find(filter)
+    .populate("addedBy", "email")
     .then(pacjenci => {
       if (pacjenci.length > 0) {
         res.status(200).json(pacjenci);
@@ -36,7 +37,8 @@ exports.createPatient = (req, res) => {
     data_urodzenia: req.body.data_urodzenia,
     plec: req.body.plec,
     telefon: req.body.telefon,
-    email: req.body.email
+    email: req.body.email,
+    addedBy: req.userData.userId
   });
 
   pacjent.save()

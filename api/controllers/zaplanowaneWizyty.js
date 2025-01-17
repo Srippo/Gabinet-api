@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const ZaplanowanaWizyta = require("../models/zaplanowaneWizyty");
 
-// Pobranie wszystkich zaplanowanych wizyt
+// Pobranie wszystkich zaplanowanych wizyt z możliwością filtrowania
 exports.getAll = async (req, res) => {
     const { id, imie, nazwisko, telefon, email } = req.query;
 
@@ -45,7 +45,6 @@ exports.getAll = async (req, res) => {
         .catch(err => res.status(500).json({ error: err.message }));
 };
 
-
 // Dodanie nowej zaplanowanej wizyty
 exports.add = (req, res) => {
     const zaplanowanaWizyta = new ZaplanowanaWizyta({
@@ -55,27 +54,12 @@ exports.add = (req, res) => {
         termin: req.body.termin,
         lekarz: req.body.lekarz,
         potwierdzona: req.body.potwierdzona,
-        zrealizowana: req.body.zrealizowana
+        zrealizowana: req.body.zrealizowana,
+        dodanaPrzez: req.userData.userId
     });
 
     zaplanowanaWizyta.save()
         .then(result => res.status(201).json({ message: "Zaplanowana wizyta dodana", wizyta: result }))
-        .catch(err => res.status(500).json({ error: err }));
-};
-
-// Pobranie zaplanowanej wizyty po ID
-exports.getById = (req, res) => {
-    const id = req.params.wizytaId;
-
-    ZaplanowanaWizyta.findById(id)
-        .populate("pacjent", "imie nazwisko email")
-        .populate("lekarz", "imie nazwisko specjalizacja")
-        .then(wizyta => {
-            if (!wizyta) {
-                return res.status(404).json({ message: "Nie znaleziono wizyty o podanym ID" });
-            }
-            res.status(200).json(wizyta);
-        })
         .catch(err => res.status(500).json({ error: err }));
 };
 

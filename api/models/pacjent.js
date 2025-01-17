@@ -7,7 +7,8 @@ const pacjentSchema = mongoose.Schema({
     data_urodzenia: { type: Date, required: false },
     plec: { type: String, required: false },
     telefon: { type: String, required: false },
-    email: { type: String, required: false }
+    email: { type: String, required: false },
+    addedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }
 });
 
 module.exports = mongoose.model("Pacjent", pacjentSchema, "patients");
