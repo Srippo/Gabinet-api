@@ -239,17 +239,22 @@ You may download the list of dentists, and use filters to narrow down the search
 
 - **Download dentists named "Anna":**
 
+
 #### **GET** `/dentysci?imie=Anna`
 
 
 - **Download dentists with expertise "Ortodonta":**
+
 
 #### **GET** `/dentysci?specjalizacja=Ortodonta`
 
 
 - **Download dentists with surname "Nowak" and phone number "123456789":**
 
+
 #### **GET** `/dentysci?nazwisko=Nowak&telefon=123456789`
+
+
 
 ### Expected Response for **GET** `/dentysci`
 ```json
