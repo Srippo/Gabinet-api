@@ -145,7 +145,7 @@ Use Base URL: [http://localhost:3000/](http://localhost:3000/)
 | PATCH  | /zaplanowaneWizyty/:wizytaId | Updates a given field of a planned visit specified by id (user must be logged in) |
 
 
-## Register endpoint
+## Register endpoint for the role "user"
 
 ### **POST** `/userRoutes/signup`
 
@@ -162,8 +162,112 @@ Use Base URL: [http://localhost:3000/](http://localhost:3000/)
 ```json
 {
     "message": "User registered successfuly",
-    "userId": "userId"
+    "userId": "<userId>"
 }
+```
+
+## Login endpoint
+
+### **POST** `/userRoutes/login`
+
+### Expected Body
+```json
+{
+    "email": "example@gmail.com", // string, required
+    "password": "password123", // string, required
+}
+```
+
+
+### Expected Response
+```json
+{
+    "message": "Login successful",
+    "token": "<webtoken>",
+    "user": {
+        "id": "<userId>",
+        "email": "example@gmail.com",
+        "role": "user"
+    }
+}
+```
+
+
+## Register endpoint for the role "admin"
+
+### **POST** `userRoutes/signup`
+
+#### Expected Body
+```json
+{
+    "email": "example@gmail.com", // string, unique, required
+    "password": "password123", // string, required
+    "name": "username", // string, required
+    "role": "admin" // string
+}
+```
+
+### Expected Response
+```json
+{
+    "message": "User registered sucessfuly",
+    "userId": "<userId>"
+}
+```
+
+### Login endpoint remains the same for any role
+
+
+## Dentysci endpoints
+
+
+### **GET** `/dentysci`
+
+You may download the list of dentists, and use filters to narrow down the search. Available query parameters:
+
+
+| Parameter       | Type   | Description                                                  |
+|-----------------|--------|--------------------------------------------------------------|
+| `imie`          | string | Filters dentists by name (eg., "Anna").                      |
+| `nazwisko`      | string | Filters dentists by surname (eg., "Nowak").                  |
+| `specjalizacja` | string | Filters dentists by their expertise (eg., "Ortodonta").      |
+| `telefon`       | string | Filters dentists by their phone number (eg., "123456789").   |
+| `email`         | string | Filters dentists by their email (eg., anna.nowak@gmail.com). |
+
+#### Few example uses of query filters:
+
+
+- **Download dentists named "Anna":**
+
+#### **GET** `/dentysci?imie=Anna`
+
+
+- **Download dentists with expertise "Ortodonta":**
+
+#### **GET** `/dentysci?specjalizacja=Ortodonta`
+
+
+- **Download dentists with surname "Nowak" and phone number "123456789":**
+
+#### **GET** `/dentysci?nazwisko=Nowak&telefon=123456789`
+
+### Expected Response for **GET** `/dentysci`
+```json
+[
+    {
+        "godziny pracy": {
+            "start": "08:00",
+            "end": "16:00"
+        },
+        "_id": "67812fefda8a101cdfdcb3f5",
+        "imie": "Anna",
+        "nazwisko": "Nowak",
+        "specjalizacja": "Ortodonta",
+        "telefon": "123456789",
+        "email": "anna.nowak@gmail.com",
+        "__v": "0"
+    }
+]
 ```
 ## Usage
 How does one go about using it?
