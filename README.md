@@ -144,6 +144,27 @@ Use Base URL: [http://localhost:3000/](http://localhost:3000/)
 | DELETE | /zaplanowaneWizyty/:wizytaId | Deletes a planned visit specified by id (user must be logged in)                  |
 | PATCH  | /zaplanowaneWizyty/:wizytaId | Updates a given field of a planned visit specified by id (user must be logged in) |
 
+
+## Register endpoint
+
+### **POST** `/userRoutes/signup`
+
+#### Expected Body
+```json
+{
+    "email": "example@gmail.com", // string, unique, required
+    "password": "password123", // string, required
+    "name": "username" // string, required
+}
+```
+
+#### Expected Response
+```json
+{
+    "message": "User registered successfuly",
+    "userId": "userId"
+}
+```
 ## Usage
 How does one go about using it?
 Provide various use cases and code examples here.
