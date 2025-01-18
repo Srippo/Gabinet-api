@@ -237,22 +237,22 @@ You may download the list of dentists, and use filters to narrow down the search
 #### Few example uses of query filters:
 
 
-- **Download dentists named "Anna":**
+#### **Download dentists named "Anna":**
 
 
-#### **GET** `/dentysci?imie=Anna`
+-  **GET** `/dentysci?imie=Anna`
 
 
-- **Download dentists with expertise "Ortodonta":**
+#### **Download dentists with expertise "Ortodonta":**
 
 
-#### **GET** `/dentysci?specjalizacja=Ortodonta`
+- **GET** `/dentysci?specjalizacja=Ortodonta`
 
 
-- **Download dentists with surname "Nowak" and phone number "123456789":**
+#### **Download dentists with surname "Nowak" and phone number "123456789":**
 
 
-#### **GET** `/dentysci?nazwisko=Nowak&telefon=123456789`
+- **GET** `/dentysci?nazwisko=Nowak&telefon=123456789`
 
 
 
