@@ -664,6 +664,55 @@ Logged in user with any role may download the list of visits, and use filters to
         "__v": 0
     },
 ]
+```
+
+### **POST** `/wizyty`
+
+### Expected Body
+```json
+{
+    "pacjent": "678138d53734560f2da0ecb5",
+    "dentysta": "678138853734560f2da0eca7",
+    "data": "2025-01-20T10:00:00Z",
+    "platnosc": true,
+    "koszt_wizyty": 150,
+    "uwagi_wizyta": "Wizyta standardowa z wypełnieniem ubytku.",
+    "wykonane_zabiegi": [
+        {
+            "id_zabiegu": "678d0f9cd1110a6fd8618d82",
+            "czas_trwania": "30 minut",
+            "koszt": 150
+        }
+    ]
+}
+```
+
+
+### Expected Respone 
+```json
+{
+    "message": "Wizyta dodana pomyślnie!",
+    "wizyta": {
+        "_id": "678d13abf029feb624151121",
+        "pacjent": "678138d53734560f2da0ecb5",
+        "dentysta": "678138853734560f2da0eca7",
+        "data": "2025-01-20T10:00:00.000Z",
+        "platnosc": true,
+        "koszt_wizyty": 150,
+        "uwagi_wizyta": "Wizyta standardowa z wypełnieniem ubytku.",
+        "dodanaPrzez": "678d13abf029feb624151122",
+        "wykonane_zabiegi": [
+            {
+                "id_zabiegu": "678d0f9cd1110a6fd8618d82",
+                "czas_trwania": "30 minut",
+                "koszt": 150,
+                "_id": "678d13abf029feb624151123"
+            }
+        ],
+        "__v": 0
+    }
+}
+```
 
 ## Usage
 How does one go about using it?
