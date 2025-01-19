@@ -1098,4 +1098,4 @@ Logged in user with any role may update planned visits in the database.
 Project is: _complete_
 
 ## Contact
-Created by Srippo (filip.szreder.slupsk@gmail.com) - feel free to contact me!
+Created by Srippo (filip.szreder.slupsk@gmail.com) and PiasKar (piaskar2004@gmail.com) - feel free to contact us!
