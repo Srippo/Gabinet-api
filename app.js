@@ -3,15 +3,23 @@ const express = require("express");
 const mongoose = require("mongoose");
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
-
 const app = express();
 
+require("dotenv").config();
+
+const mongoUser = process.env.DB_USER;
+const mongoPassword = process.env.DB_PASSWORD;
+const mongoCluster = process.env.DB_CLUSTER;
+const mongoDBName = process.env.DB_NAME;
+const mongoAuth = process.env.DB_AUTH || "mongodb";
+
+const mongoURI = `mongodb+srv://${mongoUser}:${mongoPassword}@${mongoCluster}.${mongoAuth}.net/${mongoDBName}?retryWrites=true&w=majority`;
+
 // Połączenie z MongoDB
-mongoose.connect(
-  `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@filip.lat9w.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`
-)
-  .then(() => console.log("Connected to MongoDB"))
-  .catch(err => console.error(err));
+mongoose
+  .connect(mongoURI)
+  .then(() => console.log("Połączono z MongoDB"))
+  .catch((err) => console.error("Błąd połączenia z MongoDB:", err));
 
 // Middleware
 app.use(morgan("dev"));

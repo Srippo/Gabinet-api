@@ -3,9 +3,9 @@ const Wizyta = require("../models/wizyta");
 
 // Pobranie wszystkich wizyt z możliwością filtrowania
 exports.getAll = async (req, res) => {
-  const { id_wizyty, imie_pacjenta, nazwisko_pacjenta, imie_dentysty, nazwisko_dentysty, data } = req.query;
+  const { id_wizyty, imie_pacjenta, nazwisko_pacjenta, imie_dentysty, nazwisko_dentysty, specjalizacja_dentysty, data, platnosc, wykonane_zabiegi } = req.query;
 
-  let filter = {dodanaPrzez: req.userData.userId };
+  let filter = { dodanaPrzez: req.userData.userId };
 
   if (id_wizyty) {
     filter["_id"] = id_wizyty;
@@ -19,19 +19,20 @@ exports.getAll = async (req, res) => {
     const pacjenci = await mongoose.model("Pacjent").find(pacjentFilter).select("_id");
     const pacjentIds = pacjenci.map(p => p._id);
     if (pacjentIds.length > 0) {
-      filter["id_pacjenta"] = { $in: pacjentIds };
+      filter["pacjent"] = { $in: pacjentIds };
     }
   }
 
-  if (imie_dentysty || nazwisko_dentysty) {
+  if (imie_dentysty || nazwisko_dentysty || specjalizacja_dentysty) {
     const dentystaFilter = {};
     if (imie_dentysty) dentystaFilter["imie"] = new RegExp(imie_dentysty, "i");
     if (nazwisko_dentysty) dentystaFilter["nazwisko"] = new RegExp(nazwisko_dentysty, "i");
+    if (specjalizacja_dentysty) dentystaFilter["specjalizacja"] = new RegExp(specjalizacja_dentysty, "i");
 
     const dentyści = await mongoose.model("Dentysta").find(dentystaFilter).select("_id");
     const dentystaIds = dentyści.map(d => d._id);
     if (dentystaIds.length > 0) {
-      filter["id_dentysty"] = { $in: dentystaIds };
+      filter["dentysta"] = { $in: dentystaIds };
     }
   }
 
@@ -39,10 +40,24 @@ exports.getAll = async (req, res) => {
     filter["data"] = new Date(data);
   }
 
-  // Wyszukiwanie wizyt z filtrem
+  if (platnosc !== undefined) {
+    filter["platnosc"] = platnosc === "true";
+  }
+
+  if (wykonane_zabiegi) {
+    const zabiegFilter = { nazwa: new RegExp(wykonane_zabiegi, "i") };
+
+    const zabiegi = await mongoose.model("Zabieg").find(zabiegFilter).select("_id");
+    const zabiegIds = zabiegi.map(z => z._id);
+
+    if (zabiegIds.length > 0) {
+      filter["wykonane_zabiegi.id_zabiegu"] = { $in: zabiegIds };
+    }
+  }
+
   Wizyta.find(filter)
-    .populate("id_pacjenta", "imie nazwisko")
-    .populate("id_dentysty", "imie nazwisko specjalizacja")
+    .populate("pacjent", "imie nazwisko")
+    .populate("dentysta", "imie nazwisko specjalizacja")
     .populate("wykonane_zabiegi.id_zabiegu", "nazwa opis cena")
     .populate("dodanaPrzez", "email name")
     .then(wizyty => {

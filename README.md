@@ -55,10 +55,13 @@ List the ready features here:
 4. Configure a database in MongoDB Atlas
     - Create a cluster in MongoDB Atlas
 5. Create an .env file and insert
-    - DB_USER = yourname
-    - DB_PASSWORD = yourpassword
-    - DB_NAME = yourdatabasename
-    - JWT_KEY = secret
+    - DB_USER=yourusername
+    - DB_PASSWORD=yourpassword
+    - DB_NAME=yourdatabasename
+    - DB_CLUSTER=yourdbclustername
+    - DB_AUTH=mongodb
+    - JWT_KEY=yourJWT
+    - PORT=3000
 6. Create connection to your database
 7. Launch the API with node server.js 
 
@@ -223,7 +226,7 @@ Use Base URL: [http://localhost:3000/](http://localhost:3000/)
 
 ### **GET** `/dentysci`
 
-You may download the list of dentists, and use filters to narrow down the search. Available query parameters:
+User with any role may download the list of dentists, and use filters to narrow down the search. Available query parameters:
 
 
 | Parameter       | Type   | Description                                                  |
@@ -234,7 +237,7 @@ You may download the list of dentists, and use filters to narrow down the search
 | `telefon`       | string | Filters dentists by their phone number (eg., "123456789").   |
 | `email`         | string | Filters dentists by their email (eg., anna.nowak@gmail.com). |
 
-#### Few example uses of query filters:
+### Few example uses of query filters:
 
 
 #### **Download dentists named "Anna":**
@@ -274,6 +277,394 @@ You may download the list of dentists, and use filters to narrow down the search
     }
 ]
 ```
+
+
+### **POST** `/dentysci`
+
+
+Please note that only users with the role "admin" may add new dentists.
+
+
+#### Expected Body
+```json
+{
+    "godziny_pracy": {
+        "start": "06:30",
+        "end" : "14:30"
+    },
+    "imie": "Janusz",
+    "nazwisko": "Kowalski",
+    "specjalizacja": "Chirurg szczękowy",
+    "telefon": "555666777",
+    "email": "JanuszKowal@gmail.com"
+}
+```
+
+
+#### Expected Response
+```json
+{
+    "message": "Dentysta dodany",
+    "dentysta": {
+        "_id": "678bbc6e2dbf02c71f607358",
+        "imie": "Janusz",
+        "nazwisko": "Kowalski",
+        "specjalizacja": "Chirurg szczękowy",
+        "godziny_pracy": {
+            "start": "06:30",
+            "end": "14:30"
+        },
+        "telefon": "555666777",
+        "email": "JanuszKowal@gmail.com",
+        "__v": 0
+    }
+}
+```
+
+
+### **DELETE** `/dentysci/:id`
+
+
+Please note that only users with the role "admin" may delete dentists.
+
+
+#### Expected Query
+
+
+- **DELETE** `/dentysci/678bbc6e2dbf02c71f607358`
+
+
+#### Expected Response
+```json
+{
+    "message": "Dentysta usunięty",
+    "dentysta": {
+        "godziny_pracy": {
+            "start": "06:30",
+            "end": "14:30"
+        },
+        "_id": "678bbc6e2dbf02c71f607358",
+        "imie": "Janusz",
+        "nazwisko": "Kowalski",
+        "specjalizacja": "Chirurg szczękowy",
+        "telefon": "555666777",
+        "email": "JanuszKowal@gmail.com",
+        "__v": 0
+    }
+}
+```
+
+
+### **PATCH** `/dentysci/:id`
+
+
+Please note that only users with the role of "admin" may update entries. You may update as many fields as you wish.
+
+
+#### Expected Query
+
+
+- **PATCH** `/dentysci/678bbc6e2dbf02c71f607358`
+
+
+#### Expected Body
+```json
+{
+    "telefon": "999888777",
+    "email": "KowalJanusz@gmail.com"
+}
+```
+
+
+#### Expected Response
+```json
+{
+    "message": "Dentysta zaktualizowany",
+    "dentysta": {
+        "godziny_pracy": {
+            "start": "06:30",
+            "end": "14:30"
+        },
+        "_id": "678bbc6e2dbf02c71f607358",
+        "imie": "Janusz",
+        "nazwisko": "Kowalski",
+        "specjalizacja": "Chirurg szczękowy",
+        "telefon": "999888777",
+        "email": "KowalJanusz@gmail.com",
+        "__v": 0
+    }
+}
+```
+
+
+## Pacjenci Endpoints
+
+
+### **GET** `/pacjenci`
+
+Logged in user with any role may download the list of dentists, and use filters to narrow down the search. Available query parameters:
+
+
+| Parameter       | Type   | Description                                                  |
+|-----------------|--------|--------------------------------------------------------------|
+| `imie`          | string | Filters patients by name (eg., "Jan").                       |
+| `nazwisko`      | string | Filters patients by surname (eg., "Kowalski").               |
+| `plec`          | string | Filters patients by their gender (eg., "kobieta").           |
+| `telefon`       | string | Filters patients by their phone number (eg., "123456789").   |
+| `email`         | string | Filters patients by their email (eg., Jan.Kowal@gmail.com).  |
+
+
+### Few example uses of query filters:
+
+
+#### **Download patients named "Jan":**
+
+- **GET** `/pacjenci?imie=Jan`
+
+
+#### **Download patients by surname "Kowalski":**
+
+- **GET** `/pacjenci?nazwisko=Kowalski`
+
+
+#### **Download patients by both name and surname "Jan Kowalski":**
+
+- **GET** `/pacjenci?imie=Jan&nazwisko=Kowalski`
+
+
+### **Download patients by both name and phone number "Jan 444555666":**
+
+- **GET** `/pacjenci?imie=Jan&telefon=444555666`
+
+
+### Expected Response for **GET** `/pacjenci`
+```json
+[
+    {
+        "_id": "67813048da8a101cdfdcb3f7",
+        "imie": "Jan",
+        "nazwisko": "Kowalski",
+        "data_urodzenia": "1999-02-14T00:00:00.000Z",
+        "plec": "mężczyzna",
+        "telefon": "444555666",
+        "email": "Jan.Kowal@gmail.com",
+        "__v": 0
+    }
+]
+```
+
+
+### **POST** `/pacjenci`
+
+Logged in user with any role may add new patients
+
+
+### Expected Body
+```json
+{
+    "imie": "Jan", // String, Required
+    "nazwisko": "Kowalski", // String, Required
+    "data_urodzenia": "1999-02-14", // Date, Required
+    "plec": "mezczyzna", // String, Required
+    "telefon": "444555666", // String, Required
+    "email": "jan.kowal@gmail.com" // String, Required
+}
+```
+
+
+### Expected Response
+```json
+{
+    "message": "Pacjent dodany",
+    "pacjent": {
+        "_id": "67813048da8a101cdfdcb3f7",
+        "imie": "Jan",
+        "nazwisko": "Kowalski",
+        "data_urodzenia": "1999-02-14T00:00:00.000Z",
+        "plec": "mezczyzna",
+        "telefon": "444555666",
+        "email": "jan.kowal@gmail.com",
+        "addedBy": "678a5dfa32f73ae6672bc6d6",
+        "__v": 0
+    }
+}
+```
+
+
+### **DELETE** `/pacjenci/:id`
+
+
+Logged in user with any role may delete patients.
+
+
+### Expected Query
+
+
+- **DELETE** `/pacjenci/67813048da8a101cdfdcb3f7`
+
+
+### Expected Response
+```json
+{
+    "message": "Pacjent usunięty",
+    "pacjent": {
+        "_id": "678bc3cd9ad93cddd33a077c",
+        "imie": "Jan",
+        "nazwisko": "Kowalski",
+        "data_urodzenia": "1999-02-14T00:00:00.000Z",
+        "plec": "mezczyzna",
+        "telefon": "444555666",
+        "email": "jan.kowal@gmail.com",
+        "addedBy": "678a5dfa32f73ae6672bc6d6",
+        "__v": 0
+    }
+}
+```
+
+
+### **PATCH** `/pacjenci/:id`
+
+
+Logged in user with any role may update patients
+
+
+### Expected Query
+
+
+- **PATCH** `/pacjenci/678bc3cd9ad93cddd33a077c`
+
+
+### Expected Body
+```json
+{
+    "telefon": "111222333",
+    "email": "kowal.jan@gmail.com"
+}
+```
+
+
+### Expected Response
+```json
+{
+    "message": "Pacjent zaktualizowany",
+    "pacjent": {
+        "_id": "678bc3cd9ad93cddd33a077c",
+        "imie": "Jan",
+        "nazwisko": "Kowalski",
+        "data_urodzenia": "1999-02-14T00:00:00.000Z",
+        "plec": "mezczyzna",
+        "telefon": "111222333",
+        "email": "kowal.jan@gmail.com",
+        "addedBy": "678a5dfa32f73ae6672bc6d6",
+        "__v": 0
+    }
+}
+```
+
+
+## Wizyty Endpoints
+
+### **GET** `/wizyty`
+
+Logged in user with any role may download the list of visits, and use filters to narrow down the search. Available query parameters:
+
+
+| Parameter                | Type   | Description                                                           |
+|--------------------------|--------|-----------------------------------------------------------------------|
+| `imie_pacjenta`          | string | Filters visits by the patient's name (eg., "Joanna").                 |
+| `nazwisko_pacjenta`      | string | Filters visits by the patient's surname (eg., "Krawczyk").            |
+| `id_pacjenta`            | string | Filters visits by the patient's id                                    |
+| `imie_dentysty`          | string | Filters visits by the dentist's name (eg., "Mariusz").                |
+| `nazwisko_dentysty`      | string | Filters visits by the dentist's surname (eg., "Warszawski").          |
+| `id_dentysty`            | string | Filters visits by the dentist's id                                    |
+| `id_wizyty`              | string | Filters visits by the visit's id                                      |
+| `platnosc`               | bool   | Filters visits by the payment's status (eg., "true", "false")         |
+| `specjalizacja_dentysty` | string | Filters visits by the dentist's expertise (eg., "protetyk)            |
+| `wykonane_zabiegi`       | string | Filters visits by done procedure's name (eg., "leczenie", "usuwanie") |
+| `id_zabiegu`             | string | Filters visits by done procedure's Id                                 |
+| `dodana_przez`           | string | Filters visits by the user who added them (eg., "user@gmail.com")     |
+
+
+### Few example uses of query filters:
+
+
+#### **Download visits by patient's name "Joanna":**
+
+- **GET** `/wizyty?imie_pacjenta=Joanna`
+
+
+### **Download visits by patient's Id":**
+
+- **GET** `/wizyty?id_pacjenta=678138b93734560f2da0ecaf`
+
+
+### **Download visits by dentist's surname":**
+
+- **GET** `/wizyty?nazwisko_dentysty=Warszawski`
+
+
+### **Download visits by dentist's name "Mariusz" and expertise "Stomatologia chirurgiczna":**
+
+- **GET** `/wizyty?imie_dentysty=Mariusz&specjalizacja_dentysty=Stomatologia chirurgiczna`
+
+
+### **Download visits by the payment's status "True":**
+
+- **GET** `/wizyty?platnosc=True`
+
+
+### **Download visits by the procedure's name "Leczenie kanałowe":**
+
+- **GET** `/wizyty?wykonane_zabiegi=leczenie kanałowe`
+
+
+### **Download visits by the procedure's Id:**
+
+- **GET** `/wizyty?id_zabiegu=6781391f3734560f2da0ecbb`
+
+
+
+### Expected Response for **GET** `/wizyty`
+```json
+[
+    {
+        "_id": "678a6eb1a53d8bc1d4a7b783",
+        "id_pacjenta": {
+            "_id": "678138b93734560f2da0ecaf",
+            "imie": "Joanna",
+            "nazwisko": "Krawczyk"
+        },
+        "id_dentysty": {
+            "_id": "678a69eafb808b637ed9abcc",
+            "imie": "Mariusz",
+            "nazwisko": "Warszawski",
+            "specjalizacja": "Stomatologia chirurgiczna"
+        },
+        "data": "2025-01-20T00:00:00.000Z",
+        "platnosc": true,
+        "koszt_wizyty": 500,
+        "uwagi_wizyta": "Pacjent potrzebuje dodatkowej konsultacji",
+        "dodanaPrzez": {
+            "_id": "678a5dfa32f73ae6672bc6d6",
+            "email": "filip@gmail.com"
+        },
+        "wykonane_zabiegi": [
+            {
+                "id_zabiegu": {
+                    "_id": "6781391f3734560f2da0ecbb",
+                    "nazwa": "Leczenie kanałowe",
+                    "opis": "Usunięcie zainfekowanej miazgi z kanałów korzeniowych i ich szczelne wypełnienie.",
+                    "cena": 600
+                },
+                "czas_trwania": "2 godziny",
+                "koszt": 600,
+                "_id": "678a6eb1a53d8bc1d4a7b784"
+            }
+        ],
+        "__v": 0
+    },
+]
+
 ## Usage
 How does one go about using it?
 Provide various use cases and code examples here.

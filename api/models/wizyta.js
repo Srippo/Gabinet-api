@@ -2,8 +2,8 @@ const mongoose = require("mongoose");
 
 const wizytaSchema = mongoose.Schema({
     _id: mongoose.Types.ObjectId,
-    id_pacjenta: { type: mongoose.Types.ObjectId, ref: "Pacjent", required: true },
-    id_dentysty: { type: mongoose.Types.ObjectId, ref: "Dentysta", required: true },
+    pacjent: { type: mongoose.Types.ObjectId, ref: "Pacjent", required: true },
+    dentysta: { type: mongoose.Types.ObjectId, ref: "Dentysta", required: true },
     data: { type: Date, required: true },
     platnosc: { type: Boolean, required: true },
     koszt_wizyty: { type: Number, required: true },

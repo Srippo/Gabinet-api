@@ -3,7 +3,7 @@ const Pacjent = require("../models/pacjent");
 
 // Pobranie wszystkich pacjentów z możliwością filtrowania
 exports.getAllPatients = (req, res) => {
-  const { id, imie, nazwisko, telefon, email } = req.query;
+  const { id, imie, nazwisko, telefon, email, plec } = req.query;
 
   let filter = {};
 
@@ -14,6 +14,7 @@ exports.getAllPatients = (req, res) => {
     if (nazwisko) filter["nazwisko"] = new RegExp(nazwisko, "i");
     if (telefon) filter["telefon"] = new RegExp(telefon, "i");
     if (email) filter["email"] = new RegExp(email, "i");
+    if (plec) filter["plec"] = plec;
   }
 
   Pacjent.find(filter)
@@ -27,6 +28,7 @@ exports.getAllPatients = (req, res) => {
     })
     .catch(err => res.status(500).json({ error: err.message }));
 };
+
 
 // Dodanie nowego pacjenta
 exports.createPatient = (req, res) => {
