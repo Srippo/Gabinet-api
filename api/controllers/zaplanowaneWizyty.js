@@ -3,7 +3,7 @@ const ZaplanowanaWizyta = require("../models/zaplanowaneWizyty");
 
 // Pobranie wszystkich zaplanowanych wizyt z możliwością filtrowania
 exports.getAll = async (req, res) => {
-    const { id, imie, nazwisko, telefon, email } = req.query;
+    const { id, imie, nazwisko, telefon, email, zrealizowana } = req.query;
 
     let filter = {};
 
@@ -12,10 +12,9 @@ exports.getAll = async (req, res) => {
     } else {
         let searchCriteria = [];
 
-        if (telefon) searchCriteria.push({ telefon: new RegExp(telefon, "i") });
-
-        if (imie || nazwisko || email) {
+        if (telefon || imie || nazwisko || email) {
             let pacjentFilter = {};
+            if (telefon) pacjentFilter["telefon"] = new RegExp(telefon, "i");
             if (imie) pacjentFilter["imie"] = new RegExp(imie, "i");
             if (nazwisko) pacjentFilter["nazwisko"] = new RegExp(nazwisko, "i");
             if (email) pacjentFilter["email"] = new RegExp(email, "i");
@@ -33,8 +32,12 @@ exports.getAll = async (req, res) => {
         }
     }
 
+    if (zrealizowana !== undefined) {
+        filter["zrealizowana"] = zrealizowana === "true";
+    }
+
     ZaplanowanaWizyta.find(filter)
-        .populate("pacjent", "imie nazwisko email")
+        .populate("pacjent", "imie nazwisko email telefon")
         .populate("lekarz", "imie nazwisko specjalizacja")
         .then(wizyty => {
             if (wizyty.length === 0) {
@@ -44,6 +47,8 @@ exports.getAll = async (req, res) => {
         })
         .catch(err => res.status(500).json({ error: err.message }));
 };
+
+
 
 // Dodanie nowej zaplanowanej wizyty
 exports.add = (req, res) => {

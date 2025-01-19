@@ -3,7 +3,7 @@ const Zabieg = require("../models/zabieg");
 
 // Pobranie wszystkich zabiegów z możliwością filtrowania
 exports.getAll = (req, res) => {
-    const { id_zabiegu, nazwa, opis, minCena, maxCena, czas_trwania } = req.query;
+    const { id_zabiegu, nazwa, opis, cena, minCena, maxCena, czas_trwania } = req.query;
 
     let filter = {};
 
@@ -12,8 +12,10 @@ exports.getAll = (req, res) => {
     if (nazwa) filter["nazwa"] = new RegExp(nazwa, "i");
 
     if (opis) filter["opis"] = new RegExp(opis, "i");
-
-    if (minCena || maxCena) {
+    
+    if (cena) {
+        filter["cena"] = parseFloat(cena);
+    } else if (minCena || maxCena) {
         filter["cena"] = {};
         if (minCena) filter["cena"]["$gte"] = parseFloat(minCena);
         if (maxCena) filter["cena"]["$lte"] = parseFloat(maxCena);
@@ -31,6 +33,7 @@ exports.getAll = (req, res) => {
         })
         .catch(err => res.status(500).json({ error: err.message }));
 };
+
 
 // Aktualizacja danych zabiegu
 exports.updateById = (req, res) => {

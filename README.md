@@ -5,14 +5,16 @@
 * [General Info](#general-information)
 * [Technologies Used](#technologies-used)
 * [Features](#features)
-* [Screenshots](#screenshots)
 * [Setup](#setup)
-* [Usage](#usage)
+* [Api endpoints](#api-endpoints)
+* [Register endpoints](#register-endpoint-for-the-role-user)
+* [Dentysci endpoints](#dentysci-endpoints)
+* [Pacjenci endpoints](#pacjenci-endpoints)
+* [Wizyty endpoints](#wizyty-endpoints)
+* [Zabiegi endpoints](#zabiegi-enpoints)
+* [ZaplanowaneWizyty endpoints](#zaplanowane-wizyty-endpoints)
 * [Project Status](#project-status)
-* [Room for Improvement](#room-for-improvement)
-* [Acknowledgements](#acknowledgements)
 * [Contact](#contact)
-<!-- * [License](#license) -->
 
 
 ## General Information
@@ -40,11 +42,6 @@ List the ready features here:
 - Adding, editing and deleting patients
 - Managing visits (arranging planned visits, cancelling, changing dates)
 - Storing doctor's data and assigning them to visits
-
-
-## Screenshots
-![Example screenshot](./img/screenshot.png)
-<!-- If you have screenshots you'd like to share, include them here. -->
 
 
 ## Setup
@@ -155,9 +152,9 @@ Use Base URL: [http://localhost:3000/](http://localhost:3000/)
 #### Expected Body
 ```json
 {
-    "email": "example@gmail.com", // string, unique, required
-    "password": "password123", // string, required
-    "name": "username" // string, required
+    "email": "example@gmail.com", // String, Unique, Required
+    "password": "password123", // String, Required
+    "name": "username" // String, Required
 }
 ```
 
@@ -165,7 +162,7 @@ Use Base URL: [http://localhost:3000/](http://localhost:3000/)
 ```json
 {
     "message": "User registered successfuly",
-    "userId": "<userId>"
+    "userId": "678a5dfa32f73ae6672bc6d6"
 }
 ```
 
@@ -176,8 +173,8 @@ Use Base URL: [http://localhost:3000/](http://localhost:3000/)
 ### Expected Body
 ```json
 {
-    "email": "example@gmail.com", // string, required
-    "password": "password123", // string, required
+    "email": "example@gmail.com", // String, Required
+    "password": "password123", // String, Required
 }
 ```
 
@@ -186,9 +183,9 @@ Use Base URL: [http://localhost:3000/](http://localhost:3000/)
 ```json
 {
     "message": "Login successful",
-    "token": "<webtoken>",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzhhNWRmYTMyZjczYWU2NjcyYmM2ZDYiLCJlbWFpbCI6ImZpbGlwQGdtYWlsLmNvbSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzM3MzE5NjMwLCJleHAiOjE3Mzc0MDYwMzB9.wKkVI2PTtYuTh3vTwhie2_6HyMdKH4NfdSKwnB_PbLY",
     "user": {
-        "id": "<userId>",
+        "id": "678a5dfa32f73ae6672bc6d6",
         "email": "example@gmail.com",
         "role": "user"
     }
@@ -203,10 +200,10 @@ Use Base URL: [http://localhost:3000/](http://localhost:3000/)
 #### Expected Body
 ```json
 {
-    "email": "example@gmail.com", // string, unique, required
-    "password": "password123", // string, required
-    "name": "username", // string, required
-    "role": "admin" // string
+    "email": "example@gmail.com", // String, Unique, Required
+    "password": "password123", // String, Required
+    "name": "username", // String, Required
+    "role": "admin" // String
 }
 ```
 
@@ -214,7 +211,7 @@ Use Base URL: [http://localhost:3000/](http://localhost:3000/)
 ```json
 {
     "message": "User registered sucessfuly",
-    "userId": "<userId>"
+    "userId": "678a5dfa32f73ae6672bc6d6"
 }
 ```
 
@@ -288,15 +285,15 @@ Please note that only users with the role "admin" may add new dentists.
 #### Expected Body
 ```json
 {
-    "godziny_pracy": {
-        "start": "06:30",
-        "end" : "14:30"
+    "godziny_pracy": { // Object, Required
+        "start": "06:30", // String, Required
+        "end" : "14:30" // String, Required
     },
-    "imie": "Janusz",
-    "nazwisko": "Kowalski",
-    "specjalizacja": "Chirurg szczękowy",
-    "telefon": "555666777",
-    "email": "JanuszKowal@gmail.com"
+    "imie": "Janusz", // String, Required
+    "nazwisko": "Kowalski", // String, Required
+    "specjalizacja": "Chirurg szczękowy", // String, Required
+    "telefon": "555666777", // String, Required
+    "email": "JanuszKowal@gmail.com" // String, Required
 }
 ```
 
@@ -325,7 +322,7 @@ Please note that only users with the role "admin" may add new dentists.
 ### **DELETE** `/dentysci/:id`
 
 
-Please note that only users with the role "admin" may delete dentists.
+Logged in users with the role "admin" may delete users from the database.
 
 
 #### Expected Query
@@ -358,7 +355,7 @@ Please note that only users with the role "admin" may delete dentists.
 ### **PATCH** `/dentysci/:id`
 
 
-Please note that only users with the role of "admin" may update entries. You may update as many fields as you wish.
+Logged in users with role "admin" may update dentists in the database.
 
 
 #### Expected Query
@@ -456,7 +453,7 @@ Logged in user with any role may download the list of dentists, and use filters 
 
 ### **POST** `/pacjenci`
 
-Logged in user with any role may add new patients
+Logged in user with any role may add new patients to the database.
 
 
 ### Expected Body
@@ -494,7 +491,7 @@ Logged in user with any role may add new patients
 ### **DELETE** `/pacjenci/:id`
 
 
-Logged in user with any role may delete patients.
+Logged in user with any role may delete patients from the database.
 
 
 ### Expected Query
@@ -525,7 +522,7 @@ Logged in user with any role may delete patients.
 ### **PATCH** `/pacjenci/:id`
 
 
-Logged in user with any role may update patients
+Logged in user with any role may update patients in the database.
 
 
 ### Expected Query
@@ -665,23 +662,23 @@ Logged in user with any role may download the list of visits, and use filters to
 ### **POST** `/wizyty`
 
 
-Logged in user with any role may add new visits.
+Logged in user with any role may add new visits to the database.
 
 
 ### Expected Body
 ```json
 {
-    "pacjent": "678138d53734560f2da0ecb5",
-    "dentysta": "678a69eafb808b637ed9abcc",
-    "data": "2025-01-20T10:00:00.000Z",
-    "platnosc": true,
-    "koszt_wizyty": 800,
-    "uwagi_wizyta": "Pierwsza wizyta - wybielanie zębów.",
+    "pacjent": "678138d53734560f2da0ecb5", // String, Required
+    "dentysta": "678a69eafb808b637ed9abcc", // String, Required
+    "data": "2025-01-20", // Date, Required
+    "platnosc": true, // Bool, Required
+    "koszt_wizyty": 800, // Number, Required
+    "uwagi_wizyta": "Pierwsza wizyta - wybielanie zębów.", // String
     "wykonane_zabiegi": [
         {
-            "id_zabiegu": "678139383734560f2da0ecbf",
-            "czas_trwania": "1 godzina",
-            "koszt": 800
+            "id_zabiegu": "678139383734560f2da0ecbf", // String, Required
+            "czas_trwania": "1 godzina", // String, Required
+            "koszt": 800 // Number, Required
         }
     ]
 }
@@ -716,7 +713,7 @@ Logged in user with any role may add new visits.
 ### **DELETE** `/wizyty/:wizytaId`
 
 
-Logged in user with any role may delete visits by the visit id.
+Logged in user with any role may delete visits from the database.
 
 
 ### Expected Query
@@ -754,7 +751,7 @@ Logged in user with any role may delete visits by the visit id.
 ### **PATCH*** `/wizyty/:wizytaId`
 
 
-Logged in user with any role may update visits by the visit id.
+Logged in user with any role may update visits in the database.
 
 
 ### Expected Query
@@ -796,42 +793,309 @@ Logged in user with any role may update visits by the visit id.
 ```
 
 
-## Usage
-How does one go about using it?
-Provide various use cases and code examples here.
+## Zabiegi enpoints
 
-`write-your-code-here`
+### **GET** `/zabiegi`
 
+Logged in user with any role may download the list of procedures, and use filters to narrow down the search. Available query parameters:
+
+
+| Parameter       | Type   | Description                                                                 |
+|-----------------|--------|-----------------------------------------------------------------------------|
+| `id_zabiegu`    | string | Filters procedures by procedure's id.                                       |
+| `nazwa`         | string | Filters procedures by procedure's name (eg., "Usuwanie zęba").              |
+| `opis`          | string | Filters procedures by procedure's description (eg., "Wyrywanie zęba siłą"). |
+| `cena`          | string | Filters procedures by procedure's price (eg., 200).                         |
+| `minCena`       | string | Filters procedures by minimum price (eg., 100).                             |
+| `maxCena`       | string | Filters procedures by maximum price (eg., 500).                             |
+
+
+### Few example uses of query filters:
+
+#### **Download procedures by procedure's Id:**
+
+- **GET** `/zabiegi?id_zabiegu=6781310569a7fe63f47ef015`
+
+#### **Download procedures by procedure's name "Usuwanie kamienia nazębnego": (please note that you may abbreviate the name)**
+
+- **GET** `/zabiegi?nazwa=Usuwanie kamienia nazębnego`
+- **GET** `/zabiegi?nazwa=Usuwanie` (abbreviated form)
+
+#### **Download procedures by procedure's price "200":**
+
+-**GET** `/zabiegi?cena=200`
+
+#### **Download procedures by a price range of "200" to "500":**
+
+-**GET** `/zabiegi?minCena=200&maxCena=500`
+
+
+### Expected response for **GET** `/zabiegi`
+```json
+[
+    {
+        "_id": "678139143734560f2da0ecb9",
+        "nazwa": "Wypełnienie zęba",
+        "opis": "Rekonstrukcja ubytku w zębie przy użyciu materiału kompozytowego.",
+        "cena": 190,
+        "czas_trwania": "40 minut",
+        "__v": 0
+    }
+]
+```
+
+
+### **POST** `/zabiegi`
+
+Logged in user with the role "admin" may add new procedures to the database.
+
+### Expected Body
+```json
+{
+    "nazwa": "Fluoryzacja zębów", // String, Required
+    "opis": "Pokrycie zębów specjalnym preparatem zawierającym fluor w celu wzmocnienia szkliwa i zapobiegania próchnicy.", // String, Required
+    "cena": 120, // Number, Required
+    "czas_trwania": "15 minut" // String, Required
+}
+```
+
+
+### Expected Response
+```json
+{
+    "message": "Zabieg dodany",
+    "zabieg": {
+        "_id": "678d58354a9a79f31ddfa079",
+        "nazwa": "Fluoryzacja zębów",
+        "opis": "Pokrycie zębów specjalnym preparatem zawierającym fluor w celu wzmocnienia szkliwa i zapobiegania próchnicy.",
+        "cena": 120,
+        "czas_trwania": "15 minut",
+        "__v": 0
+    }
+}
+```
+
+
+### **DELETE** `/zabiegi/:zabiegId`
+
+Logged in user with the role "admin" may delete procedures from the database.
+
+### Expected Query
+
+- **DELETE** `/zabiegi/678d0f9cd1110a6fd8618d82`
+
+
+### Expected Response
+```json
+{
+    "message": "Zabieg usunięty"
+}
+```
+
+
+### **PATCH** `/zabiegi/:zabiegId`
+
+Logged in user with the role "admin" may update procedures in the database.
+
+### Expected Query
+
+- **PATCH** `/zabiegi/678d58354a9a79f31ddfa079`
+
+### Expected Body
+```json
+{
+    "cena": 130,
+    "czas_trwania": "20 minut"
+}
+```
+
+### Expected Response
+```json
+{
+    "message": "Zabieg zaktualizowany",
+    "zabieg": {
+        "_id": "678d58354a9a79f31ddfa079",
+        "nazwa": "Fluoryzacja zębów",
+        "opis": "Pokrycie zębów specjalnym preparatem zawierającym fluor w celu wzmocnienia szkliwa i zapobiegania próchnicy.",
+        "cena": 130,
+        "czas_trwania": "20 minut",
+        "__v": 0
+    }
+}
+```
+
+## Zaplanowane wizyty Endpoints
+
+
+### **GET** `/zaplanowaneWizyty`
+
+Logged in user with any role may download the list of planned visits, and use filters to narrow down the search. Available query parameters:
+
+| Parameter       | Type   | Description                                                                  |
+|-----------------|--------|------------------------------------------------------------------------------|
+| `id`            | string | Filters planned visits by planned visit's id.                                |
+| `imie`          | string | Filters planned visits by patient's name (eg., "Zofia").                     |
+| `nazwisko`      | string | Filters planned visits by patient's surname (eg., "Wójcik").                 |
+| `email`         | string | Filters planned visits by patient's email (eg., "zofia.wojcik@example.com"). | 
+| `zrealizowana`  | bool   | Filters planned visits by the visit's status (eg., "true", "false").         |
+|`telefon`        | string | Filters planned visits by patient's phone number (eg., "666777888").         |
+
+### Few example uses of query filters:
+
+
+#### Download planned visits by planned visit's id
+
+- **GET** `/zaplanowaneWizyty?id=67867ff6fb259ac5e1c01930`
+
+#### Download planned visits by patient's name "Zofia"
+
+- **GET** `/zaplanowaneWizyty?imie=Zofia`
+
+#### Download planned visits by patient's name "Zofia" and surname "Wójcik"
+
+- **GET** `/zaplanowaneWizyty?imie=Zofia&nazwisko=Wójcik`
+
+#### Download planned visits by patient's email "zofia.wojcik@example.com"
+
+- **GET** `/zaplanowaneWizyty?email=zofia.wojcik@example.com`
+
+#### Download planned visits by status "true"
+
+- **GET** `/zaplanowaneWizyty?zrealizowana=true
+
+### Expected response for **GET** `/zaplanowaneWizyty
+```json
+[
+    {
+        "_id": "67867f23539af774a9422808",
+        "pacjent": {
+            "_id": "678138ca3734560f2da0ecb3",
+            "imie": "Zofia",
+            "nazwisko": "Wójcik",
+            "email": "zofia.wojcik@example.com"
+        },
+        "termin": "2025-01-15T10:00:00.000Z",
+        "lekarz": {
+            "_id": "678138853734560f2da0eca7",
+            "imie": "Katarzyna",
+            "nazwisko": "Wiśniewska",
+            "specjalizacja": "stomatolog ogólny"
+        },
+        "potwierdzona": true,
+        "zrealizowana": false,
+        "__v": 0
+    }
+]
+```
+
+### **POST** `/zaplanowaneWizyty`
+
+Logged in user with any role may add new planned visits to the database.
+
+#### Expected Body
+```json
+{
+    "pacjent": "678138c13734560f2da0ecb1", // String, Required
+    "lekarz": "678138a13734560f2da0ecab", // String, Required
+    "termin": "2025-07-30", // Date, Required
+    "potwierdzona": "false", // Bool, Required
+    "zrealizowana": "false" // Bool, Required
+}
+```
+
+#### Expected Response
+```json
+[
+    {
+        "_id": "678d5f359246b888874575b9",
+        "pacjent": {
+            "_id": "678138c13734560f2da0ecb1",
+            "imie": "Michał",
+            "nazwisko": "Czarnecki",
+            "telefon": "666777888",
+            "email": "michal.czarnecki@example.com"
+        },
+        "termin": "2025-07-30T00:00:00.000Z",
+        "lekarz": {
+            "_id": "678138a13734560f2da0ecab",
+            "imie": "Magdalena",
+            "nazwisko": "Nowicka",
+            "specjalizacja": "endodonta"
+        },
+        "potwierdzona": false,
+        "zrealizowana": false,
+        "dodanaPrzez": "678a64a3ff3c121b0d5151c7",
+        "__v": 0
+    }
+]
+```
+
+
+### **DELETE** `/zaplanowaneWizyty/:wizytaId`
+
+Logged in user with any role may delete planned visits from the database.
+
+#### Expected Query
+
+- **DELETE** `/zaplanowaneWizyty/678a74715a81bb5af3bac3a1
+
+#### Expected Response
+```json
+{
+    "message": "Zaplanowana wizyta została usunięta",
+    "wizyta": {
+        "_id": "678a74715a81bb5af3bac3a1",
+        "pacjent": "678138ca3734560f2da0ecb3",
+        "telefon": "777888999",
+        "termin": "2025-02-17T12:00:00.000Z",
+        "lekarz": "678138943734560f2da0eca9",
+        "potwierdzona": true,
+        "zrealizowana": false,
+        "dodanaPrzez": "678a5dfa32f73ae6672bc6d6",
+        "__v": 0
+    }
+}
+```
+
+
+### **PATCH** `/zaplanowaneWizyty/:wizytaId`
+
+Logged in user with any role may update planned visits in the database.
+
+
+#### Expected Query
+
+- **PATCH** `/zaplanowaneWizyty/678d5f359246b888874575b9`
+
+
+#### Expected Body
+```json
+{
+    "potwierdzona": "true",
+    "zrealizowana": "true"
+}
+```
+
+
+#### Expected Response
+```json
+{
+    "message": "Zaplanowana wizyta zaktualizowana",
+    "wizyta": {
+        "_id": "678d5f359246b888874575b9",
+        "pacjent": "678138c13734560f2da0ecb1",
+        "termin": "2025-07-30T00:00:00.000Z",
+        "lekarz": "678138a13734560f2da0ecab",
+        "potwierdzona": true,
+        "zrealizowana": true,
+        "dodanaPrzez": "678a64a3ff3c121b0d5151c7",
+        "__v": 0
+    }
+}
+```
 
 ## Project Status
-Project is: _in progress_ / _complete_ / _no longer being worked on_. If you are no longer working on it, provide reasons why.
-
-
-## Room for Improvement
-Include areas you believe need improvement / could be improved. Also add TODOs for future development.
-
-Room for improvement:
-- Improvement to be done 1
-- Improvement to be done 2
-
-To do:
-- Feature to be added 1
-- Feature to be added 2
-
-
-## Acknowledgements
-Give credit here.
-- This project was inspired by...
-- This project was based on [this tutorial](https://www.example.com).
-- Many thanks to...
-
+Project is:  / _complete_ / 
 
 ## Contact
-Created by [@flynerdpl](https://www.flynerd.pl/) - feel free to contact me!
-
-
-<!-- Optional -->
-<!-- ## License -->
-<!-- This project is open source and available under the [... License](). -->
-
-<!-- You don't have to include all sections - just the one's relevant to your project -->
+Created by [@srippo](filip.szreder.slupsk@gmail.com) - feel free to contact me!

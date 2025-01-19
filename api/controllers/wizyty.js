@@ -123,12 +123,10 @@ exports.updateById = (req, res) => {
   const id = req.params.wizytaId;
   const updateData = req.body;
 
-  // Walidacja ID
   if (!mongoose.isValidObjectId(id)) {
     return res.status(400).json({ message: "Nieprawidłowy format ID" });
   }
 
-  // Znajdź i zaktualizuj wizytę
   Wizyta.findByIdAndUpdate(id, updateData, { new: true, runValidators: true })
     .then(updatedWizyta => {
       if (!updatedWizyta) {

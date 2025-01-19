@@ -10,10 +10,10 @@ router.get("/", authMiddleware, zabiegi.getAll);
 // Aktualizacja danych zabiegu
 router.patch("/:zabiegId", authMiddleware, zabiegi.updateById);
 
-// Dodanie nowego zabiegu
+// Dodanie nowego zabiegu (tylko admin)
 router.post("/", authMiddleware, checkRole("admin"), zabiegi.create);
 
-// Usunięcie zabiegu
+// Usunięcie zabiegu (tylko admin)
 router.delete("/:zabiegId", authMiddleware, checkRole("admin"), zabiegi.deleteById);
 
 module.exports = router;
