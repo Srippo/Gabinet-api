@@ -1095,7 +1095,7 @@ Logged in user with any role may update planned visits in the database.
 ```
 
 ## Project Status
-Project is:  / _complete_ / 
+Project is: _complete_
 
 ## Contact
-Created by [@srippo](filip.szreder.slupsk@gmail.com) - feel free to contact me!
+Created by Srippo (filip.szreder.slupsk@gmail.com) - feel free to contact me!
