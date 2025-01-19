@@ -623,65 +623,65 @@ Logged in user with any role may download the list of visits, and use filters to
 - **GET** `/wizyty?id_zabiegu=6781391f3734560f2da0ecbb`
 
 
-
 ### Expected Response for **GET** `/wizyty`
 ```json
 [
     {
-        "_id": "678a6eb1a53d8bc1d4a7b783",
-        "id_pacjenta": {
-            "_id": "678138b93734560f2da0ecaf",
-            "imie": "Joanna",
-            "nazwisko": "Krawczyk"
+        "_id": "678d1924d272ce222587bf7d",
+        "pacjent": {
+            "_id": "678138d53734560f2da0ecb5",
+            "imie": "Paweł",
+            "nazwisko": "Nowosielski"
         },
-        "id_dentysty": {
+        "dentysta": {
             "_id": "678a69eafb808b637ed9abcc",
             "imie": "Mariusz",
             "nazwisko": "Warszawski",
             "specjalizacja": "Stomatologia chirurgiczna"
         },
-        "data": "2025-01-20T00:00:00.000Z",
+        "data": "2025-01-20T10:00:00.000Z",
         "platnosc": true,
-        "koszt_wizyty": 500,
-        "uwagi_wizyta": "Pacjent potrzebuje dodatkowej konsultacji",
-        "dodanaPrzez": {
-            "_id": "678a5dfa32f73ae6672bc6d6",
-            "email": "filip@gmail.com"
-        },
+        "koszt_wizyty": 800,
+        "uwagi_wizyta": "Pierwsza wizyta - wybielanie zębów.",
         "wykonane_zabiegi": [
             {
                 "id_zabiegu": {
-                    "_id": "6781391f3734560f2da0ecbb",
-                    "nazwa": "Leczenie kanałowe",
-                    "opis": "Usunięcie zainfekowanej miazgi z kanałów korzeniowych i ich szczelne wypełnienie.",
-                    "cena": 600
+                    "_id": "678139383734560f2da0ecbf",
+                    "nazwa": "Wybielanie zębów",
+                    "opis": "Profesjonalne wybielanie zębów przy użyciu preparatów na bazie nadtlenku wodoru.",
+                    "cena": 800,
+                    "czas_trwania": "1 godzina"
                 },
-                "czas_trwania": "2 godziny",
-                "koszt": 600,
-                "_id": "678a6eb1a53d8bc1d4a7b784"
+                "czas_trwania": "1 godzina",
+                "koszt": 800,
+                "_id": "678d1924d272ce222587bf7e"
             }
         ],
         "__v": 0
-    },
+    }
 ]
 ```
 
 ### **POST** `/wizyty`
 
+
+Logged in user with any role may add new visits.
+
+
 ### Expected Body
 ```json
 {
     "pacjent": "678138d53734560f2da0ecb5",
-    "dentysta": "678138853734560f2da0eca7",
-    "data": "2025-01-20T10:00:00Z",
+    "dentysta": "678a69eafb808b637ed9abcc",
+    "data": "2025-01-20T10:00:00.000Z",
     "platnosc": true,
-    "koszt_wizyty": 150,
-    "uwagi_wizyta": "Wizyta standardowa z wypełnieniem ubytku.",
+    "koszt_wizyty": 800,
+    "uwagi_wizyta": "Pierwsza wizyta - wybielanie zębów.",
     "wykonane_zabiegi": [
         {
-            "id_zabiegu": "678d0f9cd1110a6fd8618d82",
-            "czas_trwania": "30 minut",
-            "koszt": 150
+            "id_zabiegu": "678139383734560f2da0ecbf",
+            "czas_trwania": "1 godzina",
+            "koszt": 800
         }
     ]
 }
@@ -691,7 +691,43 @@ Logged in user with any role may download the list of visits, and use filters to
 ### Expected Respone 
 ```json
 {
-    "message": "Wizyta dodana pomyślnie!",
+    "message": "Wizyta dodana",
+    "wizyta": {
+        "_id": "678d1924d272ce222587bf7d",
+        "pacjent": "678138d53734560f2da0ecb5",
+        "dentysta": "678a69eafb808b637ed9abcc",
+        "data": "2025-01-20T10:00:00.000Z",
+        "platnosc": true,
+        "koszt_wizyty": 800,
+        "uwagi_wizyta": "Pierwsza wizyta - wybielanie zębów.",
+        "wykonane_zabiegi": [
+            {
+                "id_zabiegu": "678139383734560f2da0ecbf",
+                "czas_trwania": "1 godzina",
+                "koszt": 800,
+                "_id": "678d1924d272ce222587bf7e"
+            }
+        ],
+        "__v": 0
+    }
+}
+```
+
+### **DELETE** `/wizyty/:wizytaId`
+
+
+Logged in user with any role may delete visits by the visit id.
+
+
+### Expected Query
+
+- **DELETE** `/wizyta/678d13abf029feb624151121`
+
+
+### Expected Response
+```json
+{
+    "message": "Wizyta została usunięta",
     "wizyta": {
         "_id": "678d13abf029feb624151121",
         "pacjent": "678138d53734560f2da0ecb5",
@@ -713,6 +749,52 @@ Logged in user with any role may download the list of visits, and use filters to
     }
 }
 ```
+
+
+### **PATCH*** `/wizyty/:wizytaId`
+
+
+Logged in user with any role may update visits by the visit id.
+
+
+### Expected Query
+
+- **PATCH** `/wizyta/678d1924d272ce222587bf7d`
+
+
+### Expected Body
+```json
+{
+    "koszt_wizyty": 750
+}
+```
+
+
+### Expected Response
+```json
+{
+    "message": "Wizyta zaktualizowana",
+    "wizyta": {
+        "_id": "678d1924d272ce222587bf7d",
+        "pacjent": "678138d53734560f2da0ecb5",
+        "dentysta": "678a69eafb808b637ed9abcc",
+        "data": "2025-01-20T10:00:00.000Z",
+        "platnosc": true,
+        "koszt_wizyty": 750,
+        "uwagi_wizyta": "Pierwsza wizyta - wybielanie zębów.",
+        "wykonane_zabiegi": [
+            {
+                "id_zabiegu": "678139383734560f2da0ecbf",
+                "czas_trwania": "1 godzina",
+                "koszt": 800,
+                "_id": "678d1924d272ce222587bf7e"
+            }
+        ],
+        "__v": 0
+    }
+}
+```
+
 
 ## Usage
 How does one go about using it?

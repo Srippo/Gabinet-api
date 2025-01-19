@@ -3,13 +3,17 @@ const Wizyta = require("../models/wizyta");
 
 // Pobranie wszystkich wizyt z możliwością filtrowania
 exports.getAll = async (req, res) => {
-  const { id_wizyty, imie_pacjenta, nazwisko_pacjenta, imie_dentysty, nazwisko_dentysty, specjalizacja_dentysty, data, platnosc, wykonane_zabiegi } = req.query;
+  const { id, imie_pacjenta, nazwisko_pacjenta, imie_dentysty, nazwisko_dentysty, specjalizacja_dentysty, data, platnosc, wykonane_zabiegi } = req.query;
 
-  let filter = { dodanaPrzez: req.userData.userId };
+  let filter = {};
 
-  if (id_wizyty) {
-    filter["_id"] = id_wizyty;
-  }
+  if (id) {
+    if (mongoose.isValidObjectId(id)) {
+      filter["_id"] = id;
+    } else {
+      return res.status(400).json({ message: "Nieprawidłowy format ID" });
+    }
+  }  
 
   if (imie_pacjenta || nazwisko_pacjenta) {
     const pacjentFilter = {};
@@ -59,7 +63,6 @@ exports.getAll = async (req, res) => {
     .populate("pacjent", "imie nazwisko")
     .populate("dentysta", "imie nazwisko specjalizacja")
     .populate("wykonane_zabiegi.id_zabiegu", "nazwa opis cena")
-    .populate("dodanaPrzez", "email name")
     .then(wizyty => {
       if (wizyty.length > 0) {
         res.status(200).json(wizyty);
@@ -73,19 +76,25 @@ exports.getAll = async (req, res) => {
 
 // Dodanie nowej wizyty
 exports.create = (req, res) => {
+  const { pacjent, dentysta, data, platnosc, koszt_wizyty, uwagi_wizyta, wykonane_zabiegi } = req.body;
+
   const wizyta = new Wizyta({
     _id: new mongoose.Types.ObjectId(),
-    id_pacjenta: req.body.id_pacjenta,
-    id_dentysty: req.body.id_dentysty,
-    data: req.body.data,
-    platnosc: req.body.platnosc,
-    koszt_wizyty: req.body.koszt_wizyty,
-    uwagi_wizyta: req.body.uwagi_wizyta,
-    wykonane_zabiegi: req.body.wykonane_zabiegi,
-    dodanaPrzez: req.userData.userId
+    pacjent,
+    dentysta,
+    data,
+    platnosc,
+    koszt_wizyty,
+    uwagi_wizyta,
+    wykonane_zabiegi: wykonane_zabiegi.map(zabieg => ({
+      id_zabiegu: zabieg.id_zabiegu,
+      czas_trwania: zabieg.czas_trwania,
+      koszt: zabieg.koszt
+    }))
   });
 
-  wizyta.save()
+  wizyta
+    .save()
     .then(result => res.status(201).json({ message: "Wizyta dodana", wizyta: result }))
     .catch(err => res.status(500).json({ error: err }));
 };
@@ -94,12 +103,16 @@ exports.create = (req, res) => {
 exports.deleteById = (req, res) => {
   const id = req.params.wizytaId;
 
-  Wizyta.findOneAndDelete({ _id: id, dodanaPrzez: req.userData.userId })
+  if (!mongoose.isValidObjectId(id)) {
+    return res.status(400).json({ message: "Nieprawidłowy format ID" });
+  }
+
+  Wizyta.findByIdAndDelete(id) // Usuwamy filtr `dodanaPrzez`
     .then(deletedWizyta => {
       if (deletedWizyta) {
         res.status(200).json({ message: "Wizyta została usunięta", wizyta: deletedWizyta });
       } else {
-        res.status(404).json({ message: "Nie znaleziono wizyty o podanym ID lub brak uprawnień" });
+        res.status(404).json({ message: "Nie znaleziono wizyty o podanym ID" });
       }
     })
     .catch(err => res.status(500).json({ error: err.message }));
@@ -110,20 +123,25 @@ exports.updateById = (req, res) => {
   const id = req.params.wizytaId;
   const updateData = req.body;
 
-  Wizyta.findOne({ _id: id, dodanaPrzez: req.userData.userId })
-    .then(wizyta => {
-      if (!wizyta) {
-        return res.status(404).json({ message: "Nie znaleziono wizyty o podanym ID lub brak uprawnień do jej edycji" });
+  // Walidacja ID
+  if (!mongoose.isValidObjectId(id)) {
+    return res.status(400).json({ message: "Nieprawidłowy format ID" });
+  }
+
+  // Znajdź i zaktualizuj wizytę
+  Wizyta.findByIdAndUpdate(id, updateData, { new: true, runValidators: true })
+    .then(updatedWizyta => {
+      if (!updatedWizyta) {
+        return res.status(404).json({ message: "Nie znaleziono wizyty o podanym ID" });
       }
 
-      Wizyta.findByIdAndUpdate(id, updateData, { new: true, runValidators: true })
-        .then(updatedWizyta => {
-          res.status(200).json({
-            message: "Wizyta zaktualizowana",
-            wizyta: updatedWizyta,
-          });
-        })
-        .catch(err => res.status(500).json({ error: err.message }));
+      res.status(200).json({
+        message: "Wizyta zaktualizowana",
+        wizyta: updatedWizyta,
+      });
     })
-    .catch(err => res.status(500).json({ error: err.message }));
+    .catch(err => {
+      console.error("Błąd podczas aktualizacji wizyty:", err.message);
+      res.status(500).json({ error: err.message });
+    });
 };
